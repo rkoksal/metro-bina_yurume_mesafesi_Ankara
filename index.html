@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Ankara Metro-Bina Yurume Mesafesi</title>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.13/esri/css/main.css">
+  <script src="https://js.arcgis.com/4.13/"></script>
+
+  <style>
+    html,
+    body,
+    #viewDiv {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+
+  <script>
+    require([
+      "esri/WebScene",
+      "esri/layers/SceneLayer",
+      "esri/views/SceneView",
+      "esri/widgets/Legend",
+      "dojo/domReady!"
+    ], function (
+      WebScene,
+      SceneLayer,
+      SceneView,
+      Legend
+    ) {
+
+        const webscene = new WebScene({
+          portalItem: {
+            
+            id: "515f3603fbff4d2b9d3b82c7c8251f77"
+          }
+        });
+
+      
+        const view = new SceneView({
+          map: webscene,
+          container: "viewDiv",
+          qualityProfile: "high",
+          environment: {
+            lighting: {
+              directShadowsEnabled: true,
+              ambientOcclusionEnabled: true
+            },
+            atmosphereEnabled: true,
+            atmosphere: {
+              quality: "high"
+            }
+          }
+        });
+
+        window.view = view;
+
+        const buildingsLayer = new SceneLayer({
+          portalItem: {
+            id: "578748da2c634211b19c0d7adb3dd195"
+          },
+          title: "Ankara Binalar",
+          renderer: {
+            type: "simple",
+            symbol: {
+              type: "mesh-3d",
+              symbolLayers: [{
+                type: "fill",
+                material: {
+                  color: "#ffffff",
+                  colorMixMode: "replace"
+                },
+                edges: {
+                  type: "solid",
+                  color: [255, 255, 255, 0.4],
+                  size: 1
+                }
+              }]
+            },
+            visualVariables: [{
+              type: "color",
+              field: "ToBreak",
+              legendOptions: {
+                title: "Metrolara Yurume Mesafesi"
+              },
+              stops: [
+                {
+                  value: 1,
+                  label: "5 dakikadan az",
+                  color: [96, 109, 148, 1]
+                },
+                {
+                  value: 5,
+                  label: "5 dakika",
+                  color: [164, 141, 158, 1]
+                },
+                {
+                  value: 10,
+                  label: "10 dakika",
+                  color: [197, 156, 164, 1]
+                },
+                {
+                  value: 14,
+                  label: "15 dakika",
+                  color: [232, 201, 179, 1]
+                },
+                {
+                  value: 15,
+                  label: "15 dakikadan fazla",
+                  color: [233, 215, 184, 1]
+                }
+              ]
+            }]
+          }
+        });
+
+        webscene.add(buildingsLayer);
+
+        const legend = new Legend({
+          view: view
+        });
+        view.ui.add(legend, "bottom-right");
+      });
+  </script>
+</head>
+
+<body>
+  <div id="viewDiv"></div>
+</body>
+
+</html>
